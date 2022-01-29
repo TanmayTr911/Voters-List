@@ -2,11 +2,13 @@ import react,{useState} from 'react'
 import './AddUser.css'
 import Card from '../UI/Card'
 import Button from '../UI/Button'
+import ErrorModal from '../UI/ErrorModal';
 
 const AddUser=(props)=>{
 
     const [username,setUserName]=useState('');
     const [userage,setUserAge]=useState('');
+    const [error, setError] = useState();
 
     const changeName=(e)=>{
         setUserName(e.target.value);
@@ -20,22 +22,30 @@ const AddUser=(props)=>{
 
         e.preventDefault();
 
+        
+
 
         if(username.trim().length===0 && +userage<0){
-            alert("enter correct age and name");
-            setUserAge('');
-            setUserName('');
+            setError({
+                title: 'Invalid input',
+                message: 'Please enter a valid name and age (non-empty values).'
+              });
+            return;
         }
         else if(username.trim().length===0){
-            alert("enter correct name");
-            setUserAge('');
-            setUserName('');
+            setError({
+                title: 'Invalid input',
+                message: 'Please enter a valid name'
+              });
+              return;
         }
         else if(+userage<18 && +userage>0){ 
             let agediff=18-userage;
-            alert("User Too Young to Vote.Come after "+agediff+" years");
-            setUserAge('');
-            setUserName('');
+            setError({
+                title: 'Invalid input',
+                message: 'User too Young to vote . Please come after '+agediff+ ' years'
+              });
+              return;
         }
 
         else{
@@ -47,11 +57,27 @@ const AddUser=(props)=>{
 
         }
 
+        function errorRem() {
+            setError(null);
+        }
+
         
     }
 
     return(
+        <div>
+
+{error && 
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onok={errorRem}
+        />
+      }
+        
+        
         <Card className='input' >
+           
         <form onSubmit={onAddUser}>
             
             <label htmlFor='Username' className='label'>User Name</label>
@@ -65,6 +91,7 @@ const AddUser=(props)=>{
         </form>
 
         </Card>
+        </div>
     );
             
 

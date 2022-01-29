@@ -11,7 +11,7 @@ function App() {
         
     setUserList((prevUserList)=>{
       return(
-        [...prevUserList,{name:userName,age:userAge}]
+        [...prevUserList,{name:userName,age:userAge,id:Math.random().toString()}]
       ); 
     })
   }
